@@ -12,7 +12,7 @@
 #and other important stuff. Then it packetize these information in a 
 #tar.gz archive ready to be shared in case of GNU/Linux problem.
 
-TARGET_TMP_DIR=/tmp/wallywallywootwoot
+TARGET_TMP_DIR=$(mktemp -d)
 
 clear
 echo "NoobInfo by Giovanni Santostefano @LCyberspazio"
@@ -30,16 +30,12 @@ if [ $(id -u) != 0 ]; then
    echo "========= ERROR!!!! ========="
    echo "This script requires root permissions"
    echo "So, if you don't want root on the system"
-   echo "use sudo or some other shit"
+   echo "use sudo or /bin/su"
    exit 9
 fi
 echo
 echo -n "Enter output archive name(no extension): "
 read outarchfile
-
-#creating the tmp directory
-mkdir $TARGET_TMP_DIR
-####REMEMBER TO ADD ERROR MANAGEMENT... BEAST!
 
 echo "##### UNAME #####" > $outarchfile.log.txt
 uname -a > $TARGET_TMP_DIR/uname.log
@@ -57,19 +53,25 @@ cat $TARGET_TMP_DIR/lsmod.log >> $outarchfile.log.txt
 echo "#################################################" >> $outarchfile.log.txt
 
 echo "##### LSUSB #####" >> $outarchfile.log.txt
-lsusb > $TARGET_TMP_DIR/lsusb.log
+lsusb -v > $TARGET_TMP_DIR/lsusb.log
 cat $TARGET_TMP_DIR/lsusb.log >> $outarchfile.log.txt
 echo "#################################################" >> $outarchfile.log.txt
 
 echo "##### LSPCI #####" >> $outarchfile.log.txt
-lspci > $TARGET_TMP_DIR/lspci.log
+lspci -v > $TARGET_TMP_DIR/lspci.log
 cat $TARGET_TMP_DIR/lspci.log >> $outarchfile.log.txt
 echo "#################################################" >> $outarchfile.log.txt
 
 echo "##### LSSCSI #####" >> $outarchfile.log.txt
-lsscsi > $TARGET_TMP_DIR/lsscsi.log
+lsscsi -v > $TARGET_TMP_DIR/lsscsi.log
 cat $TARGET_TMP_DIR/lsscsi.log >> $outarchfile.log.txt
 echo "#################################################" >> $outarchfile.log.txt
+
+echo "##### LSPCMCIA #####" >> $outarchfile.log.txt
+lspcmcia -v > $TARGET_TMP_DIR/lspci.log
+cat $TARGET_TMP_DIR/lspci.log >> $outarchfile.log.txt
+echo "#################################################" >> $outarchfile.log.txt
+
 
 echo "##### DMESG #####" >> $outarchfile.log.txt
 cat /var/log/dmesg > $TARGET_TMP_DIR/dmesg.log
@@ -87,5 +89,16 @@ echo "REPORT FILES:"
 echo $outarchfile.log.txt
 echo $outarchfile.tar.gz 
 echo "Successfully created..." 
-echo "Upload the tar.gz somewhere or use the txt file in a pastebin resource"
+echo
+echo
+echo -n "Upload the report on a pastebin resource (arin.ga)? [y/n]: "
+read upchoice
+if [[ $upchoice =~ ^[Yy] ]]
+then
+    echo "Uploading report to arin.ga, copy and paste the following link: "
+    cat $outarchfile.log.txt | curl -F "aringa=<-" arin.ga
+else
+    echo "Have a nice day!"
+fi
+
 echo

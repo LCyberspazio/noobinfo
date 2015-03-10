@@ -1,6 +1,8 @@
 # noobinfo
 A GNU/Linux tool to generate a complete report of hardware specs, ready to share on a forum to help resolving hardware and software issues.
 
+It also automatically upload the report to the paste bin arin.ga
+
 # Developer
 Giovanni Santostefano @LCyberspazio
 
@@ -27,5 +29,13 @@ Run with:
 and then follow the instructions. Once the script has completed its 
 execution please share the created reports. Report is provided in two 
 forms: a tar.gz form if you can upload it somwhere and a .txt form 
-containing the loooooong report if you need to upload it on a pastebin 
-resource.
+containing the loooooong report.
+
+It also upload the txt report to the paste bin arin.ga
+
+# Thanks
+
+Thanks for the suggestions to:
+
+Holger_Gehrke
+and everyone gave me feedback useful to improve this script.
